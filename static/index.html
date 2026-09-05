@@ -509,6 +509,58 @@
       gap: 8px;
     }
 
+    .card-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .fullscreen-btn {
+      width: 30px;
+      height: 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+      transition: all 0.2s;
+    }
+
+    .fullscreen-btn:hover,
+    .fullscreen-btn:focus-visible {
+      color: #fff;
+      border-color: var(--border-hover);
+      background: rgba(168, 85, 247, 0.16);
+      outline: none;
+    }
+
+    .output-card:fullscreen {
+      width: 100%;
+      max-width: none;
+      height: 100%;
+      min-height: 0;
+      border: 0;
+      border-radius: 0;
+      background: var(--bg-card-solid);
+    }
+
+    .output-card:fullscreen .card-body {
+      max-height: none;
+      padding: 28px clamp(24px, 5vw, 72px);
+      font-size: 15px;
+    }
+
+    .output-card:fullscreen .llm-markdown p,
+    .output-card:fullscreen .llm-markdown ul,
+    .output-card:fullscreen .llm-markdown ol {
+      font-size: 15px;
+    }
+
     .badge-counter {
       font-size: 11px;
       font-weight: 600;
@@ -829,12 +881,15 @@
       </div>
 
       <!-- Right Panel: Final Decompilation Answer -->
-      <div class="output-card">
+      <div class="output-card" id="architecturalReportCard">
         <div class="card-header">
           <div class="card-title">
             <span>Architectural Report</span>
           </div>
-          <span id="confBadgeSlot"></span>
+          <div class="card-header-actions">
+            <span id="confBadgeSlot"></span>
+            <button type="button" id="reportFullscreenBtn" class="fullscreen-btn" aria-label="View architectural report in full screen" title="View full screen">⛶</button>
+          </div>
         </div>
         <div class="card-body" id="resultPanel">
           <div style="color: var(--text-dim); font-style: italic;">
@@ -857,6 +912,30 @@
     let timerInterval = null;
     let startTime = 0;
     let stepCount = 0;
+
+    const reportCard = document.getElementById('architecturalReportCard');
+    const reportFullscreenBtn = document.getElementById('reportFullscreenBtn');
+
+    function syncFullscreenButton() {
+      const isFullscreen = document.fullscreenElement === reportCard;
+      reportFullscreenBtn.textContent = isFullscreen ? '×' : '⛶';
+      reportFullscreenBtn.setAttribute('aria-label', isFullscreen ? 'Exit full screen' : 'View architectural report in full screen');
+      reportFullscreenBtn.title = isFullscreen ? 'Exit full screen' : 'View full screen';
+    }
+
+    reportFullscreenBtn.addEventListener('click', async () => {
+      try {
+        if (document.fullscreenElement === reportCard) {
+          await document.exitFullscreen();
+        } else {
+          await reportCard.requestFullscreen();
+        }
+      } catch (err) {
+        console.error('Unable to change full-screen mode:', err);
+      }
+    });
+
+    document.addEventListener('fullscreenchange', syncFullscreenButton);
 
     function updateCounter(elapsed) {
       document.getElementById('stepCounter').textContent = `${stepCount} steps • ${elapsed.toFixed(1)}s`;
