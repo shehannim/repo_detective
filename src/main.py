@@ -12,14 +12,16 @@ Endpoints:
 
 from __future__ import annotations
 
-# Load .env (preferred) or fall back to .env.example for convenience in dev
+# Load .env if present (dev convenience). On Railway/Render env vars are injected
+# directly into the process — dotenv's override=False means those take priority.
 import pathlib as _pathlib
 from dotenv import load_dotenv as _load_dotenv
 for _f in (".env", ".env.example"):
     _p = _pathlib.Path(__file__).parent.parent / _f
     if _p.exists():
-        _load_dotenv(_p)
+        _load_dotenv(_p, override=False)
         break
+
 
 import json
 import tempfile

@@ -6,3 +6,4 @@ gitpython>=3.1.40
 pydantic>=2.10.0
 python-dotenv>=1.0.0
 google-genai>=2.0.0
+anthropic>=0.40.0
