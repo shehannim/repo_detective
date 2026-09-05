@@ -200,6 +200,18 @@ async def serve_ui():
     return {"status": "ok", "service": "repo-detective-api", "version": "0.2.0"}
 
 
+@app.get("/logo.png", include_in_schema=False)
+async def serve_logo():
+    for p in [
+        _pathlib.Path(__file__).parent.parent.parent / "frontend" / "public" / "logo.png",
+        _pathlib.Path(__file__).parent.parent / "frontend" / "public" / "logo.png",
+    ]:
+        if p.exists():
+            return FileResponse(p, media_type="image/png")
+    from fastapi.responses import Response
+    return Response(status_code=404)
+
+
 @app.get("/health", response_model=HealthResponse, tags=["meta"])
 async def health():
     return HealthResponse(status="ok", version="0.2.0")

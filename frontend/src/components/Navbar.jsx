@@ -1,4 +1,5 @@
 import React from 'react';
+import { LOGO_DATA } from '../logoData';
 
 export default function Navbar() {
   return (
@@ -13,7 +14,7 @@ export default function Navbar() {
           color: 'inherit',
           display: 'inline-flex',
           alignItems: 'center',
-          gap: '10px',
+          gap: '12px',
           cursor: 'pointer',
           transition: 'transform 0.2s ease, opacity 0.2s ease',
         }}
@@ -27,12 +28,13 @@ export default function Navbar() {
         }}
       >
         <img
-          src="/logo.png"
-          alt="Repo Detective"
+          src={LOGO_DATA}
+          alt="Repo Detective Mascot"
           style={{
-            width: '38px',
-            height: '38px',
+            width: '42px',
+            height: '42px',
             objectFit: 'contain',
+            display: 'block',
             filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.4))',
           }}
         />
