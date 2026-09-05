@@ -1,6 +1,6 @@
 # repo-detective 🔍
 
-> Analyse any **public GitHub repository** and answer natural-language questions about its structure — no LLM API key required.
+> Real-time repository intelligence and architectural reasoning engine with an interactive web interface.
 
 ## Features
 
