@@ -29,12 +29,17 @@ export default function Navbar() {
       >
         <img
           src={LOGO_DATA}
+          onError={(e) => {
+            e.currentTarget.src = '/logo.png';
+          }}
           alt="Repo Detective Mascot"
           style={{
             width: '42px',
             height: '42px',
+            minWidth: '42px',
+            minHeight: '42px',
             objectFit: 'contain',
-            display: 'block',
+            display: 'inline-block',
             filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.4))',
           }}
         />
