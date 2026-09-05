@@ -49,7 +49,7 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 _ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-3-5-haiku-20241022")
-_QWEN_MODEL      = os.getenv("QWEN_MODEL", "gemini-2.0-flash")
+_QWEN_MODEL      = os.getenv("QWEN_MODEL", "gemini-3.6-flash")
 _CONTENT_CHARS   = int(os.getenv("REPO_DET_CONTENT_CHARS", "3000"))
 _LLM_TOP_K       = int(os.getenv("REPO_DET_LLM_TOP_K", "5"))
 _LLM_TIMEOUT     = float(os.getenv("REPO_DET_LLM_TIMEOUT", "30.0"))
