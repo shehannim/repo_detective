@@ -17,34 +17,48 @@
 
 ```
 repo-detective/
-├── src/
-│   ├── __init__.py      # package marker
-│   ├── main.py          # FastAPI app  (endpoints: /ask, /health, /cache)
-│   ├── ingestion.py     # clone repo, walk files, detect language
-│   ├── graph.py         # build networkx dependency graph
-│   ├── search.py        # score & rank files for a NL question
-│   └── cache.py         # in-process LRU cache
+├── backend/                  # Isolated Python FastAPI service (Secure)
+│   ├── src/
+│   │   ├── main.py           # Endpoints: /ask, /ask/stream, /issue, /issue/stream
+│   │   ├── ingestion.py      # Git cloning, AST file walking, lang detection
+│   │   ├── graph.py          # NetworkX dependency digraph builder
+│   │   ├── search.py         # Keyword TF-IDF + PageRank + centrality scoring
+│   │   ├── cache.py          # LRU repo graph cache
+│   │   ├── github.py         # GitHub API issue fetching & triage query synth
+│   │   └── qa_engine.py      # Grounded LLM reasoning & NDJSON streaming
+│   ├── requirements.txt
+│   ├── Procfile
+│   ├── railway.json
+│   └── .env.example
+├── frontend/                 # Decoupled React (Vite) client application
+│   ├── src/
+│   │   ├── components/       # Modular UI components (Navbar, Hero, Panels...)
+│   │   ├── App.jsx           # State coordination & NDJSON streaming reader
+│   │   ├── index.css         # Dark purple glow modern aesthetic
+│   │   └── main.jsx          # React 18 root
+│   ├── package.json
+│   └── vite.config.js
 ├── requirements.txt
+├── Procfile
+├── railway.json
 └── README.md
 ```
 
 ## Quick start
 
+### 1. Run the Backend (Python / FastAPI)
 ```bash
-# 1. Install dependencies
+cd backend
 pip install -r requirements.txt
-
-# 2. Start the server (reload optional for dev)
 uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+```
 
-# 3. Ask a question (replace URL and question as needed)
-curl -X POST http://localhost:8000/ask \
-  -H "Content-Type: application/json" \
-  -d '{
-    "repo_url": "https://github.com/tiangolo/fastapi",
-    "question": "Where is authentication handled?",
-    "top_n": 5
-  }'
+### 2. Run the Frontend (React / Vite)
+```bash
+cd frontend
+npm install
+npm run dev
+# Running on http://localhost:5173
 ```
 
 ## API reference

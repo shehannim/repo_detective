@@ -169,23 +169,35 @@ async def _ensure_repo(req: AskRequest):
 
 
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 # ---------------------------------------------------------------------------
 # Routes
 # ---------------------------------------------------------------------------
 
+frontend_dist = _pathlib.Path(__file__).parent.parent.parent / "frontend" / "dist"
+if (frontend_dist / "assets").exists():
+    app.mount("/assets", StaticFiles(directory=str(frontend_dist / "assets")), name="assets")
+
 
 @app.get("/", include_in_schema=False)
 async def serve_ui():
-    index_path = _pathlib.Path(__file__).parent.parent / "static" / "index.html"
-    return FileResponse(
-        index_path,
-        headers={
-            "Cache-Control": "no-cache, no-store, must-revalidate",
-            "Pragma": "no-cache",
-            "Expires": "0",
-        },
-    )
+    candidates = [
+        _pathlib.Path(__file__).parent.parent.parent / "frontend" / "dist" / "index.html",
+        _pathlib.Path(__file__).parent.parent / "static" / "index.html",
+        _pathlib.Path(__file__).parent.parent.parent / "static" / "index.html",
+    ]
+    for p in candidates:
+        if p.exists():
+            return FileResponse(
+                p,
+                headers={
+                    "Cache-Control": "no-cache, no-store, must-revalidate",
+                    "Pragma": "no-cache",
+                    "Expires": "0",
+                },
+            )
+    return {"status": "ok", "service": "repo-detective-api", "version": "0.2.0"}
 
 
 @app.get("/health", response_model=HealthResponse, tags=["meta"])

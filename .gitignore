@@ -1,6 +1,10 @@
 __pycache__/
 *.pyc
 .env
+*.env
+node_modules/
+frontend/dist/
 bulk_evaluation_results.json
 after_response.json
 scratch/
+
