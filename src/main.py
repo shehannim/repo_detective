@@ -178,7 +178,14 @@ from fastapi.responses import FileResponse
 @app.get("/", include_in_schema=False)
 async def serve_ui():
     index_path = _pathlib.Path(__file__).parent.parent / "static" / "index.html"
-    return FileResponse(index_path)
+    return FileResponse(
+        index_path,
+        headers={
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache",
+            "Expires": "0",
+        },
+    )
 
 
 @app.get("/health", response_model=HealthResponse, tags=["meta"])
